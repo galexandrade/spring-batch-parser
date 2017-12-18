@@ -1,0 +1,5 @@
+2017-01-01 23:59:57.335|192.168.25.244|"GET / HTTP/1.1"|200|"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.81 Safari/537.36"
+2017-01-01 23:59:58.735|192.168.114.222|"GET / HTTP/1.1"|200|"Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:55.0) Gecko/20100101 Firefox/55.0"
+2017-01-01 23:59:58.777|192.168.229.251|"GET / HTTP/1.1"|200|"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.81 Safari/537.36"
+2017-01-01 23:59:58.791|192.168.229.98|"GET / HTTP/1.1"|200|"Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36"
+2017-01-01 23:59:59.608|192.168.122.135|"GET / HTTP/1.1"|200|"Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:53.0) Gecko/20100101 Firefox/53.0"
