@@ -9,3 +9,10 @@ CREATE TABLE `access` (
   `user_agent` VARCHAR(200) NOT NULL,
   PRIMARY KEY (`ID`),
   INDEX `IDX_DATE` (`dt_access` ASC));
+
+DROP TABLE IF EXISTS blocked_ips;
+CREATE TABLE `blocked_ips` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `ip_address` VARCHAR(15) ,
+  `comment` VARCHAR(200) NOT NULL,
+  PRIMARY KEY (`ID`));
