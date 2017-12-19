@@ -21,7 +21,7 @@ public class CustomJobParametersValidator implements JobParametersValidator {
         Map<String, JobParameter> params = parameters.getParameters();
 
         String duration = params.get("-duration").getValue().toString();
-        if(!duration.equals("hourly") || !duration.equals("daily")){
+        if(!duration.equals("hourly") && !duration.equals("daily")){
             throw new JobParametersInvalidException("Parameter duration must be HOURLY or DAILY");
         }
     }

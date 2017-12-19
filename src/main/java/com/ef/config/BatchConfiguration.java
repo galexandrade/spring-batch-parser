@@ -2,7 +2,6 @@ package com.ef.config;
 
 import javax.sql.DataSource;
 
-import com.ef.job.AccessItemProcessor;
 import com.ef.job.BeanWrapperFieldSetMapperCustom;
 import com.ef.job.JobCompletionNotificationListener;
 import com.ef.model.Access;
@@ -36,12 +35,10 @@ public class BatchConfiguration {
 
     @Autowired
     public DataSource dataSource;
-
-    // tag::readerwriterprocessor[]
     @Bean
     public FlatFileItemReader<Access> reader() {
         FlatFileItemReader<Access> reader = new FlatFileItemReader<Access>();
-        reader.setResource(new ClassPathResource("access.txt"));
+        reader.setResource(new ClassPathResource("access.log"));
         reader.setLineMapper(new DefaultLineMapper<Access>() {{
             setLineTokenizer(new DelimitedLineTokenizer() {{
                 setNames(new String[] { "date", "IPAddress", "request", "status", "userAgent" });
@@ -52,11 +49,6 @@ public class BatchConfiguration {
             }});
         }});
         return reader;
-    }
-
-    @Bean
-    public AccessItemProcessor processor() {
-        return new AccessItemProcessor();
     }
 
 
@@ -70,9 +62,7 @@ public class BatchConfiguration {
         writer.setDataSource(dataSource);
         return writer;
     }
-    // end::readerwriterprocessor[]
 
-    // tag::jobstep[]
     @Bean
     public Job importUserJob(JobCompletionNotificationListener listener,
                              CustomJobParametersValidator validator,
@@ -91,9 +81,7 @@ public class BatchConfiguration {
         return stepBuilderFactory.get("step1")
                 .<Access, Access> chunk(10)
                 .reader(reader())
-                .processor(processor())
                 .writer(writer)
                 .build();
     }
-    // end::jobstep[]
 }

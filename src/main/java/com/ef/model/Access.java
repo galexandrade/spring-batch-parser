@@ -63,6 +63,6 @@ public class Access {
 
     @Override
     public String toString() {
-        return "date: " + date + ", ipAddess: " + IPAddress;
+        return "ipAddess: " + IPAddress ;
     }
 }

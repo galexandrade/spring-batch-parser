@@ -6,7 +6,9 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.ef.model.Access;
 import org.slf4j.Logger;
@@ -14,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import org.springframework.batch.core.BatchStatus;
 import org.springframework.batch.core.JobExecution;
+import org.springframework.batch.core.JobParameter;
 import org.springframework.batch.core.listener.JobExecutionListenerSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,12 +48,12 @@ public class JobCompletionNotificationListener extends JobExecutionListenerSuppo
 	@Override
 	public void afterJob(JobExecution jobExecution) {
 		if(jobExecution.getStatus() == BatchStatus.COMPLETED) {
-			log.info("!!! JOB FINISHED! Time to verify the results ==> " + startDate);
+			DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 			List<Access> results = jdbcTemplate.query("SELECT dt_access, ip_address, request, status, user_agent FROM access", new RowMapper<Access>() {
 				@Override
 				public Access mapRow(ResultSet rs, int row) throws SQLException {
-                    DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
 
                     Date accessDt = null;
                     try {
@@ -62,8 +65,21 @@ public class JobCompletionNotificationListener extends JobExecutionListenerSuppo
 				}
 			});
 
-			for (Access access : results) {
-				log.info("Found <" + access + "> in the database.");
+			try {
+				Date startDateParam = format.parse(startDate.replace(".", " "));
+				Map<String, Integer> IP_COUNTER = new LinkedHashMap<String, Integer>();
+
+				for (Access access : results) {
+					if(!IP_COUNTER.containsKey(access.getIPAddress()))
+						IP_COUNTER.put(access.getIPAddress(), 1);
+					else
+						IP_COUNTER.replace(access.getIPAddress(), IP_COUNTER.get(access.getIPAddress()) + 1);
+
+					if (IP_COUNTER.get(access.getIPAddress()) > threshold)
+						log.info(access.toString() + " Requests: " + IP_COUNTER.get(access.getIPAddress()));
+				}
+			} catch (ParseException e) {
+				e.printStackTrace();
 			}
 
 		}
