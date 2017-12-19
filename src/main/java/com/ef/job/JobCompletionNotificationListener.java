@@ -50,6 +50,7 @@ public class JobCompletionNotificationListener extends JobExecutionListenerSuppo
 		if(jobExecution.getStatus() == BatchStatus.COMPLETED) {
 			DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
+			//SELECT *, count(access.ip_address) FROM access.access where access.dt_access > '2017-01-01 15:00:00' and access.dt_access < '2017-01-01 16:00:00' group by access.ip_address having count(access.ip_address) > 100;
 			List<Access> results = jdbcTemplate.query("SELECT dt_access, ip_address, request, status, user_agent FROM access", new RowMapper<Access>() {
 				@Override
 				public Access mapRow(ResultSet rs, int row) throws SQLException {
@@ -61,7 +62,7 @@ public class JobCompletionNotificationListener extends JobExecutionListenerSuppo
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
-					return new Access(accessDt, rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5));
+					return new Access(accessDt, rs.getString(2), rs.getString(3), rs.getInt(4), rs.getString(5));
 				}
 			});
 
@@ -74,9 +75,13 @@ public class JobCompletionNotificationListener extends JobExecutionListenerSuppo
 						IP_COUNTER.put(access.getIPAddress(), 1);
 					else
 						IP_COUNTER.replace(access.getIPAddress(), IP_COUNTER.get(access.getIPAddress()) + 1);
+				}
 
-					if (IP_COUNTER.get(access.getIPAddress()) > threshold)
-						log.info(access.toString() + " Requests: " + IP_COUNTER.get(access.getIPAddress()));
+
+				for (String IPAddress : IP_COUNTER.keySet()){
+					int requests = IP_COUNTER.get(IPAddress);
+					if(requests > threshold)
+						log.info(IPAddress + " Requests: " + requests);
 				}
 			} catch (ParseException e) {
 				e.printStackTrace();

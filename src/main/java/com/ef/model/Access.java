@@ -7,13 +7,13 @@ public class Access {
     Date date;
     String IPAddress;
     String request;
-    String status;
+    int status;
     String userAgent;
 
     public Access() {
     }
 
-    public Access(Date date, String IPAddress, String request, String status, String userAgent) {
+    public Access(Date date, String IPAddress, String request, int status, String userAgent) {
         this.date = date;
         this.IPAddress = IPAddress;
         this.request = request;
@@ -45,11 +45,11 @@ public class Access {
         this.request = request;
     }
 
-    public String getStatus() {
+    public int getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(int status) {
         this.status = status;
     }
 
