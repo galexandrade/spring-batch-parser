@@ -16,6 +16,7 @@ import org.springframework.batch.core.BatchStatus;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.listener.JobExecutionListenerSupport;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
@@ -27,6 +28,15 @@ public class JobCompletionNotificationListener extends JobExecutionListenerSuppo
 
 	private final JdbcTemplate jdbcTemplate;
 
+	@Value("${startDate}")
+	private String startDate;
+
+	@Value("${duration}")
+	private String duration;
+
+	@Value("${threshold}")
+	private int threshold;
+
 	@Autowired
 	public JobCompletionNotificationListener(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
@@ -35,7 +45,7 @@ public class JobCompletionNotificationListener extends JobExecutionListenerSuppo
 	@Override
 	public void afterJob(JobExecution jobExecution) {
 		if(jobExecution.getStatus() == BatchStatus.COMPLETED) {
-			log.info("!!! JOB FINISHED! Time to verify the results");
+			log.info("!!! JOB FINISHED! Time to verify the results ==> " + startDate);
 
 			List<Access> results = jdbcTemplate.query("SELECT dt_access, ip_address, request, status, user_agent FROM access", new RowMapper<Access>() {
 				@Override
