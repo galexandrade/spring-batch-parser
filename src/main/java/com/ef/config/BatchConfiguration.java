@@ -79,7 +79,7 @@ public class BatchConfiguration {
     @Bean
     public Step step1(ItemWriter<Access> writer) {
         return stepBuilderFactory.get("step1")
-                .<Access, Access> chunk(10)
+                .<Access, Access> chunk(1000)
                 .reader(reader())
                 .writer(writer)
                 .build();

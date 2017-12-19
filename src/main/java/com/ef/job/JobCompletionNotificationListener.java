@@ -50,7 +50,7 @@ public class JobCompletionNotificationListener extends JobExecutionListenerSuppo
 		if(jobExecution.getStatus() == BatchStatus.COMPLETED) {
 			DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-			//SELECT *, count(access.ip_address) FROM access.access where access.dt_access > '2017-01-01 15:00:00' and access.dt_access < '2017-01-01 16:00:00' group by access.ip_address having count(access.ip_address) > 100;
+			//SELECT *, count(access.ip_address) FROM access.access where access.dt_access between '2017-01-01 15:00:00' and '2017-01-01 16:00:00' group by access.ip_address having count(access.ip_address) > 100 limit 100;
 			List<Access> results = jdbcTemplate.query("SELECT dt_access, ip_address, request, status, user_agent FROM access", new RowMapper<Access>() {
 				@Override
 				public Access mapRow(ResultSet rs, int row) throws SQLException {
