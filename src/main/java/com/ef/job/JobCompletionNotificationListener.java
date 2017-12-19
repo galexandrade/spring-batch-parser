@@ -44,45 +44,7 @@ public class JobCompletionNotificationListener extends JobExecutionListenerSuppo
 	@Override
 	public void afterJob(JobExecution jobExecution) {
 		if(jobExecution.getStatus() == BatchStatus.COMPLETED) {
-			try {
-				DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-				Date startDateParam = format.parse(startDate.replace(".", " "));
-
-				/*Calculating the final date*/
-				Calendar cal = Calendar.getInstance();
-				cal.setTime(startDateParam);
-
-				if(duration.equals("hourly"))
-					cal.add(Calendar.HOUR_OF_DAY, 1); // adds one hour
-				else
-					cal.add(Calendar.DAY_OF_MONTH, 1); // adds one day
-
-				Date finalDate = cal.getTime();
-
-				String sql = "SELECT * FROM access.access where access.dt_access between '" + format.format(startDateParam) + "' and '" + format.format(finalDate) + "' group by access.ip_address having count(access.ip_address) > " + threshold + " limit " + threshold;
-
-				List<Access> results = jdbcTemplate.query(sql, new RowMapper<Access>() {
-					@Override
-					public Access mapRow(ResultSet rs, int row) throws SQLException {
-
-
-						Date accessDt = null;
-						try {
-							accessDt = format.parse(rs.getString(3));
-						} catch (ParseException e) {
-							e.printStackTrace();
-						}
-						return new Access(accessDt, rs.getString(2), rs.getString(4), rs.getInt(5), rs.getString(6));
-					}
-				});
-
-				for (Access access : results) {
-					log.info(access.getIPAddress());
-				}
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
-
+			log.info("JOB FINISHED!");
 		}
 	}
 }
