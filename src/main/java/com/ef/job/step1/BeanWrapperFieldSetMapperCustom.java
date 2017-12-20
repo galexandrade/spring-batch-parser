@@ -1,4 +1,4 @@
-package com.ef.job;
+package com.ef.job.step1;
 
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.util.StringUtils;

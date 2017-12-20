@@ -1,7 +1,8 @@
-package com.ef.config;
+package com.ef.job.step2;
 
-import com.ef.job.AccessRowMapper;
 import com.ef.model.Access;
+import org.springframework.batch.core.Step;
+import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider;
 import org.springframework.batch.item.database.JdbcBatchItemWriter;
@@ -10,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 
 import javax.sql.DataSource;
 import java.text.DateFormat;
@@ -23,7 +23,13 @@ import java.util.Date;
  * Created by alex.andrade on 19/12/2017.
  */
 @Configuration
-public class Step2 {
+public class StepLoadBlockedIPAddress {
+    @Autowired
+    public StepBuilderFactory stepBuilderFactory;
+
+    @Autowired
+    BlockedIPAddressProcessor processor;
+
     @Autowired
     public DataSource dataSource;
 
@@ -35,6 +41,15 @@ public class Step2 {
 
     @Value("${threshold}")
     private int threshold;
+
+    public Step step2() {
+        return stepBuilderFactory.get("stepLoadBlockedIPAddress")
+                .<Access, Access> chunk(10)
+                .reader(reader2())
+                .processor(processor)
+                .writer(writer2())
+                .build();
+    }
 
     @Bean
     ItemReader<Access> reader2() {

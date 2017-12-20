@@ -3,7 +3,8 @@ package com.ef.config;
 import javax.sql.DataSource;
 
 import com.ef.job.JobCompletionNotificationListener;
-import com.ef.job.Step1;
+import com.ef.job.step1.StepLoadLogFile;
+import com.ef.job.step2.StepLoadBlockedIPAddress;
 import com.ef.model.Access;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -31,21 +32,12 @@ public class BatchConfiguration {
     @Bean
     public Job importUserJob(JobCompletionNotificationListener listener,
                              CustomJobParametersValidator validator,
-                             //@Qualifier("step1") Step step1
-                             Step1 step1,
-                             Step2 step2) {
+                             StepLoadLogFile stepLoadLogFile,
+                             StepLoadBlockedIPAddress stepLoadBlockedIPAddress) {
 
-        Step s1 = stepBuilderFactory.get("step1")
-                .<Access, Access> chunk(1000)
-                .reader(step1.reader())
-                .writer(step1.writer())
-                .build();
+        Step s1 = stepLoadLogFile.step1();
 
-        Step s2 = stepBuilderFactory.get("step2")
-                .<Access, Access> chunk(1000)
-                .reader(step2.reader2())
-                .writer(step2.writer2())
-                .build();
+        Step s2 = stepLoadBlockedIPAddress.step2();
 
         return jobBuilderFactory.get("importUserJob")
                 .incrementer(new RunIdIncrementer())

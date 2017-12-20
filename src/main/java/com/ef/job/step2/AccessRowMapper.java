@@ -1,4 +1,4 @@
-package com.ef.job;
+package com.ef.job.step2;
 
 import com.ef.model.Access;
 import org.springframework.jdbc.core.RowMapper;
