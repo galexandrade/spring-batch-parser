@@ -1,7 +1,7 @@
 # spring-batch-parser
 
 ## JAVA  
-**1. Parse and load the given log file to MySQL;** 
+**1. Parse and load the given log file to MySQL;**  
   _Done_  
 **2. The tool takes "startDate", "duration" and "threshold" as command line arguments. "startDate" is of "yyyy-MM-dd.HH:mm:ss" format, "duration" can take only "hourly", "daily" as inputs and "threshold" can be an integer;**  
   _Done_  
